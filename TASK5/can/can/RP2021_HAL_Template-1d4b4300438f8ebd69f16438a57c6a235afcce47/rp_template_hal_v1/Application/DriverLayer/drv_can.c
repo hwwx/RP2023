@@ -86,11 +86,13 @@ static void CAN_Rx_Callback(CAN_HandleTypeDef *hcan)
 {
 		HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &hcan1RxFrame.header, hcan1RxFrame.data);
 		
-		if(hcan1RxFrame.header.StdId == 0x200 + 1)//3508
+		if(hcan1RxFrame.header.StdId == 0x201)//3508
 		{
+			motor_3508__structure.info->offline_cnt=0;
 			MOTOR_3508_GET_DATA(&motor_3508__structure);
 		}else if(hcan1RxFrame.header.StdId == 0x205)//6020
 		{
+			motor_6020__structure.info->offline_cnt=0;
 			MOTOR_6020_GET_DATA(&motor_6020__structure);
 		}
 

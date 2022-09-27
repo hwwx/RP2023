@@ -26,7 +26,7 @@
 #define MOTOR_3508_SENT_ID 0x200
 #define DEV_OFFLINE        0
 #define DEV_ONLINE         1
-
+#define OFFLINE_TIME_MAX   25
 
 
 

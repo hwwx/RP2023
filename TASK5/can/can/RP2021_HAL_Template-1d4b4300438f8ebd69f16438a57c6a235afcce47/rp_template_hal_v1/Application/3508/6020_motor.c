@@ -29,8 +29,8 @@ void MOTOR_6020_INIT(motor_6020_t *motor,\
 	motor->info=info;
 	motor->info->status=DEV_OFFLINE;
 	
-//	motor->info->offline_cnt=5;
-//	motor->info->offline_cnt_max=5;
+	motor->info->offline_cnt=OFFLINE_TIME_MAX;
+	motor->info->offline_cnt_max=OFFLINE_TIME_MAX;
 	
 	motor->output_current=0;
 	

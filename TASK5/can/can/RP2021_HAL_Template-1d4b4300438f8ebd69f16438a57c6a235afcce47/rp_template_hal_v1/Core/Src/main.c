@@ -53,8 +53,9 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-motor_3508_t motor_3508__structure;
+motor_3508_t           motor_3508__structure;
 motor_3508_base_info_t motor_3508_base_info;
+motor_3508_info_t      motor_3508_info;
 
 motor_6020_t           motor_6020__structure;
 motor_6020_base_info_t motor_6020_base_info;
@@ -117,8 +118,9 @@ int main(void)
 	DRIVER_Init();
 	// 设备层初始化
 	DEV_Init();
-	MOTOR_6020_INIT(&motor_6020__structure,&motor_6020_base_info,&motor_6020_info);
 	
+	MOTOR_6020_INIT(&motor_6020__structure,&motor_6020_base_info,&motor_6020_info);
+	MOTOR_3508_INIT(&motor_3508__structure,&motor_3508_base_info,&motor_3508_info);
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

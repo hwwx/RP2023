@@ -49,21 +49,26 @@
 /* USER CODE BEGIN Variables */
 extern motor_3508_t motor_3508__structure;
 extern motor_6020_t motor_6020__structure;
-extern uint8_t data_buffer[7];
+
+
 extern HAL_StatusTypeDef MY_CAN_Sent_Data( uint16_t data_1,uint16_t data_2,uint16_t data_3,uint16_t data_4);
 extern CAN_RxFrameTypeDef hcan1RxFrame;
-uint8_t* Get_Data_Buffer;
-extern void MY_CAN_Get_Data(CAN_RxFrameTypeDef* hcan1RxFrame,uint8_t* Get_Data_Buffer);
+
+
 extern CAN_HandleTypeDef hcan1;
+
+
 uint16_t speed,current,angle;
-/* LED句柄 */
+/* 电机操作句柄 */
 static TaskHandle_t KAL_Handle = NULL;
+/* 电机监控句柄 */
+static TaskHandle_t MONITOR_MOTOR_Handle = NULL;
 
 CAN_RxHeaderTypeDef	CAN_RX_MSG;
 
 
 static void KAL_Task(void* pvParameters);
-
+static void MONITOR_MOTOR_Task(void* pvParameters);
 
 /* USER CODE END Variables */
 osThreadId MonitorTaskHandle;
@@ -145,12 +150,19 @@ void MX_FREERTOS_Init(void) {
   SendTaskHandle = osThreadCreate(osThread(SendTask), NULL);
 	
 	
+		xTaskCreate((TaskFunction_t )MONITOR_MOTOR_Task,  /* 任务入口函数 */
+										(const char*    )"MONITOR_MOTOR_Task",/* 任务名字 */
+										(uint16_t       )512,  /* 任务栈大小 */
+										(void*          )NULL,/* 任务入口函数参数 */
+										(UBaseType_t    )2, /* 任务的优先级 */
+										(TaskHandle_t*  )&MONITOR_MOTOR_Handle);/* 任务控制块指针 */ 
 		xTaskCreate((TaskFunction_t )KAL_Task,  /* 任务入口函数 */
 										(const char*    )"KAL_Task",/* 任务名字 */
 										(uint16_t       )512,  /* 任务栈大小 */
 										(void*          )NULL,/* 任务入口函数参数 */
 										(UBaseType_t    )10, /* 任务的优先级 */
 										(TaskHandle_t*  )&KAL_Handle);/* 任务控制块指针 */ 
+										
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -189,10 +201,15 @@ static void KAL_Task(void* pvParameters)
 			
 				MOTOR_6020_CAN_SENT_DATA(motor_6020__structure.output_current,0,0,0);//发送数据
 				
+				
+				motor_3508__structure.output_current=500;
+				
+				MOTOR_3508_CAN_SENT_DATA(motor_3508__structure.output_current,0,0,0);//发送数据
+				
 				/*调试参数*/
 				angle=motor_6020__structure.base_info->angle;
 				current=motor_6020__structure.base_info->current;
-				speed=motor_6020__structure.base_info->speed;
+				speed=motor_3508__structure.base_info->speed;
 
 				
 				osDelay(2);
@@ -200,6 +217,46 @@ static void KAL_Task(void* pvParameters)
 			}
 
 	}
+
+	
+	
+static void MONITOR_MOTOR_Task(void* pvParameters)
+{
+	 while(1)
+		{	
+			if(motor_6020__structure.info->offline_cnt>=motor_6020__structure.info->offline_cnt_max)
+				{
+					
+					HAL_GPIO_WritePin(GPIOC,LED_GREEN_Pin|LED_RED_Pin, GPIO_PIN_RESET);//
+					motor_6020__structure.info->status=DEV_OFFLINE;
+				}else
+				{
+					HAL_GPIO_WritePin(GPIOC, LED_GREEN_Pin|LED_RED_Pin, GPIO_PIN_SET);//等全灭
+					motor_6020__structure.info->status=DEV_ONLINE;
+					motor_6020__structure.info->offline_cnt++;
+					
+				}
+				
+				if(motor_3508__structure.info->offline_cnt>=motor_3508__structure.info->offline_cnt_max)
+				{
+					
+					HAL_GPIO_WritePin(GPIOC,LED_BLUE_Pin|LED_ORANGE_Pin, GPIO_PIN_RESET);//
+					motor_3508__structure.info->status=DEV_OFFLINE;
+				}else
+				{
+					HAL_GPIO_WritePin(GPIOC, LED_BLUE_Pin|LED_ORANGE_Pin, GPIO_PIN_SET);//等全灭
+					motor_3508__structure.info->status=DEV_ONLINE;
+					motor_3508__structure.info->offline_cnt++;
+					
+				}
+					
+					
+
+			//vTaskDelayUntil(2);绝对延时
+			osDelay(2);//相对延时 
+		}
+}
+	
 /* USER CODE END Application */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

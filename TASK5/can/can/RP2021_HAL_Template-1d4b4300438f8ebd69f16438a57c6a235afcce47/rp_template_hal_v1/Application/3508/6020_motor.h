@@ -25,7 +25,7 @@
 #define MOTOR_6020_SENT_ID 0x1FF
 #define DEV_OFFLINE        0
 #define DEV_ONLINE         1
-
+#define OFFLINE_TIME_MAX   25
 
 
 
