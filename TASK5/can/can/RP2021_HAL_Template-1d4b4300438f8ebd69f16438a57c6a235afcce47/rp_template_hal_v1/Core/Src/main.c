@@ -61,6 +61,13 @@ motor_6020_t           motor_6020__structure;
 motor_6020_base_info_t motor_6020_base_info;
 motor_6020_info_t      motor_6020_info;
 
+info_pack_t            TASK_info_pack;
+CAN_RxHeaderTypeDef    TASK_Rx;
+CAN_TxHeaderTypeDef    TASK_Tx;
+
+
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -121,6 +128,7 @@ int main(void)
 	
 	MOTOR_6020_INIT(&motor_6020__structure,&motor_6020_base_info,&motor_6020_info);
 	MOTOR_3508_INIT(&motor_3508__structure,&motor_3508_base_info,&motor_3508_info);
+	MY_TASK_PACK_INIT(&TASK_info_pack,&TASK_Rx,&TASK_Tx);
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

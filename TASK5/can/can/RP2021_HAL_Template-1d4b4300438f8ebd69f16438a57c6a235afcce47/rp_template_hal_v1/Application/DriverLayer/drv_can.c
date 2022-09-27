@@ -29,7 +29,7 @@ uint8_t can1_tx_buf[16];
 
 extern motor_3508_t motor_3508__structure;
 extern motor_6020_t motor_6020__structure;
-
+extern info_pack_t  TASK_info_pack;
 /* Private macro -------------------------------------------------------------*/
 #define DEFAULT_CAN_TX_PERIOD (2)   // 选择自动发送时建议发送间隔>=2ms
 
@@ -95,6 +95,11 @@ static void CAN_Rx_Callback(CAN_HandleTypeDef *hcan)
 			motor_6020__structure.info->offline_cnt=0;
 			MOTOR_6020_GET_DATA(&motor_6020__structure);
 		}
+		#if TASK7
+		
+		MY_CAN_GET_DATA(&);
+		
+		#endif
 
 }
 
@@ -191,6 +196,61 @@ static void CAN_UpdatePeriodAtTxPort(CAN_TxPortTypeDef *port, uint16_t tx_period
         port->tx_period = tx_period;
 }
 
+#if TASK7
+
+
+/**
+ *	@brief	数据包初始化
+ */
+void MY_TASK_PACK_INIT(info_pack_t* pack,\
+											 CAN_RxHeaderTypeDef* pRx_header,\
+											 CAN_TxHeaderTypeDef* pTx_header)
+{
+	pack->Rx_header=pRx_header;
+	pack->Tx_header=pTx_header;
+	
+	pack->Rx_header->StdId=Rx_ID;
+	pack->Rx_header->IDE= CAN_ID_STD;
+	pack->Rx_header->RTR=CAN_RTR_DATA;
+	pack->Rx_header->DLC=0x05;// 五位数据
+	
+	pack->Tx_header->StdId=Tx_ID;
+	pack->Tx_header->IDE= CAN_ID_STD;
+	pack->Tx_header->RTR=CAN_RTR_DATA;
+	pack->Tx_header->DLC=0x05;// 五位数据
+	
+	
+}
+
+/**
+ *	@brief	 发送数据
+ */
+void MY_CAN_SENT_DATA(info_pack_t *pack)
+{
+	  uint8_t data[5];
+		uint32_t txMailBox;
+		
+		data[0]      = pack->my_info_t.age;
+		data[1]      = pack->my_info_t.height >> 24;
+		data[2]      = pack->my_info_t.height >> 16;
+		data[3]      = pack->my_info_t.height >> 8;
+		data[4]      = pack->my_info_t.height >> 0;
+		
+	HAL_CAN_AddTxMessage(&hcan1,pack->Tx_header,data,&txMailBox);
+}
+
+/**
+ *	@brief	接收数据初始化（放在中断回调函数中）
+ */
+void MY_CAN_GET_DATA(info_pack_t *pack)
+{
+	pack->get_info_t.age = hcan1RxFrame.data[0];
+	pack->get_info_t.height=(hcan1RxFrame.data[1] << 24)\
+												&&(hcan1RxFrame.data[2] << 16)\
+												&&(hcan1RxFrame.data[3] << 8)\
+												&&(hcan1RxFrame.data[4]);
+}
+#endif
 /* Exported functions --------------------------------------------------------*/
 /**
  *	@brief	CAN1 初始化

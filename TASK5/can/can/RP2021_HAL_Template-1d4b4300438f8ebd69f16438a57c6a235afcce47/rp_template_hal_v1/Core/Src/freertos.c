@@ -49,7 +49,7 @@
 /* USER CODE BEGIN Variables */
 extern motor_3508_t motor_3508__structure;
 extern motor_6020_t motor_6020__structure;
-
+extern info_pack_t  TASK_info_pack;
 
 extern HAL_StatusTypeDef MY_CAN_Sent_Data( uint16_t data_1,uint16_t data_2,uint16_t data_3,uint16_t data_4);
 extern CAN_RxFrameTypeDef hcan1RxFrame;
@@ -210,6 +210,11 @@ static void KAL_Task(void* pvParameters)
 				angle=motor_6020__structure.base_info->angle;
 				current=motor_6020__structure.base_info->current;
 				speed=motor_3508__structure.base_info->speed;
+				
+				
+				
+				/*TASK7*/
+				MY_CAN_SENT_DATA(&TASK_info_pack);
 
 				
 				osDelay(2);

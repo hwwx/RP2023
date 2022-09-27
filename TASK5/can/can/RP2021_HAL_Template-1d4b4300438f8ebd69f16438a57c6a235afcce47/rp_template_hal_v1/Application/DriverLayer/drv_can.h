@@ -73,4 +73,38 @@ HAL_StatusTypeDef CAN_PushWaitTxPort(CAN_MailboxTypeDef *mailbox, CAN_TxPortType
 bool CAN_MailboxReadyForTx(CAN_MailboxTypeDef *mailbox);
 void CAN_AutoTx(CAN_MailboxTypeDef *mailbox);
 
+#define TASK7 1
+
+#if TASK7
+/*数据包定义*/
+#define Rx_ID 0x01
+#define Tx_ID 0x02
+
+typedef struct
+	{
+			uint8_t  age;
+			uint32_t height;
+	}task_data_t;
+
+typedef struct
+	{		
+			CAN_RxHeaderTypeDef* Rx_header;
+			CAN_TxHeaderTypeDef* Tx_header;
+			task_data_t         my_info_t;
+			task_data_t         get_info_t;	
+	}info_pack_t;
+
+
+void MY_TASK_PACK_INIT(info_pack_t* pack,\
+											 CAN_RxHeaderTypeDef* Rx_header,\
+											 CAN_TxHeaderTypeDef* Tx_header);
+void MY_CAN_SENT_DATA(info_pack_t *pack);
+void MY_CAN_GET_DATA(info_pack_t *pack);
+
+
+
+
+#endif
+
+
 #endif

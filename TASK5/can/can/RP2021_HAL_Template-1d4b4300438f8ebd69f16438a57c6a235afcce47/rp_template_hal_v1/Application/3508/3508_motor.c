@@ -49,14 +49,14 @@ HAL_StatusTypeDef MOTOR_3508_CAN_SENT_DATA( uint16_t data_1,uint16_t data_2,uint
   HAL_StatusTypeDef ret = HAL_ERROR;
   uint8_t data[8];
 	/*数据处理*/
-	data[0]      =data_1 >> 8;//hello
-	data[1]      =data_1;
-	data[2]      =data_2 >> 8;
-	data[3]      =data_2;
-	data[4]      =data_3 >> 8;
-	data[5]      =data_3;
-	data[6]      =data_4 >> 8;
-	data[7]      =data_4;
+	data[0]      = data_1 >> 8;//hello
+	data[1]      = data_1;
+	data[2]      = data_2 >> 8;
+	data[3]      = data_2;
+	data[4]      = data_3 >> 8;
+	data[5]      = data_3;
+	data[6]      = data_4 >> 8;
+	data[7]      = data_4;
 	/*数据帧开头*/
 	txFrameHeader.StdId = MOTOR_3508_SENT_ID;
 	txFrameHeader.IDE   = CAN_ID_STD;
