@@ -84,6 +84,7 @@
 "rp_template_hal_v1\heap_4.o"
 "rp_template_hal_v1\port.o"
 "rp_template_hal_v1\3508_motor.o"
+"rp_template_hal_v1\6020_motor.o"
 --library_type=microlib --strict --scatter "rp_template_hal_v1\rp_template_hal_v1.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

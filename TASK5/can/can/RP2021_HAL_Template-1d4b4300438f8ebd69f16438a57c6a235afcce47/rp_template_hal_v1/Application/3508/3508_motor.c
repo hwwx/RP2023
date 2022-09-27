@@ -3,26 +3,36 @@
 #include "rp_math.h"
 #include "string.h"
 
-/*
-motor_3508_base_info_t example;
-motor_3508_info_t example;
-motor_3508_t example = 
-{
-	.base_info = &example,
-	.info = &example,
-	.pid_speed = &example,
-	.pid_angle = &example,
-	.can = &example,
-	.init = motor_3508_init,
-	.update = motor_3508_update,
-	.ctrl = motor_3508_angle_ctrl,
-};
-*/
-#define MOTOR_SENT_ID 0x200
+
+#define MOTOR_3508_SENT_ID 0x200
 
 extern CAN_HandleTypeDef hcan1;
 extern CAN_HandleTypeDef hcan2;
 extern CAN_RxFrameTypeDef hcan1RxFrame;
+
+
+
+/**
+  * @brief  初始化3508结构体
+  * @param  
+  * @retval 
+  */
+void MOTOR_3508_INIT(motor_3508_t *motor,\
+										 motor_3508_base_info_t *base,\
+										 motor_3508_info_t *info)
+{
+	motor->base_info=base;
+	memset(motor->base_info,0,sizeof(motor_3508_base_info_t));
+	
+	motor->info=info;
+	motor->info->status=DEV_OFFLINE;
+	
+//	motor->info->offline_cnt=5;
+//	motor->info->offline_cnt_max=5;
+	
+	motor->output_current=0;
+	
+}
 
 /**
   * @brief  
@@ -30,17 +40,9 @@ extern CAN_RxFrameTypeDef hcan1RxFrame;
   * @retval 
 	* @note 使用can1
   */
-HAL_StatusTypeDef MY_CAN_Sent_Data( uint16_t data_1,uint16_t data_2,uint16_t data_3,uint16_t data_4)
+HAL_StatusTypeDef MOTOR_3508_CAN_SENT_DATA( uint16_t data_1,uint16_t data_2,uint16_t data_3,uint16_t data_4)
 {
 	
-	if(data_1>=800)
-		{
-			data_1=800;//防止数据过大 
-		}
-	if(data_1<=0)
-		{
-			data_1=0;
-		}
 	
 	uint32_t txMailBox;//发送邮箱
 	CAN_TxHeaderTypeDef txFrameHeader;
@@ -56,10 +58,10 @@ HAL_StatusTypeDef MY_CAN_Sent_Data( uint16_t data_1,uint16_t data_2,uint16_t dat
 	data[6]      =data_4 >> 8;
 	data[7]      =data_4;
 	/*数据帧开头*/
-	txFrameHeader.StdId = MOTOR_SENT_ID;
-	txFrameHeader.IDE = CAN_ID_STD;
-	txFrameHeader.RTR = CAN_RTR_DATA;
-	txFrameHeader.DLC = 0x08;
+	txFrameHeader.StdId = MOTOR_3508_SENT_ID;
+	txFrameHeader.IDE   = CAN_ID_STD;
+	txFrameHeader.RTR   = CAN_RTR_DATA;
+	txFrameHeader.DLC   = 0x08;
 	
 	
 	  /*默认使用CAN1*/
@@ -74,32 +76,11 @@ HAL_StatusTypeDef MY_CAN_Sent_Data( uint16_t data_1,uint16_t data_2,uint16_t dat
 
 
 /**
-  * @brief  
-  * @param  
-  * @retval 
+  * @brief  将缓冲区中的数据写入结构体
+  * @param  motor_3508_t *
+  * @retval NONE
   */
-void motor_3508_init(motor_3508_t *motor)
-{
-	memset(motor->base_info,0,sizeof(motor_3508_base_info_t));
-	motor->output_current=0;
-//	motor_3508_info_init(motor->info);
-//	if(motor->pid_angle != NULL)
-//	{
-//		pid_init(motor->pid_angle);
-//	}
-//	if(motor->pid_speed != NULL)
-//	{
-//		pid_init(motor->pid_speed);
-//	}
-	
-}
-
-/**
-  * @brief  
-  * @param  
-  * @retval 
-  */
-void motor_3508_update(motor_3508_t *motor)
+void MOTOR_3508_GET_DATA(motor_3508_t *motor)
 {
 
 	/*更新信息 */
@@ -113,8 +94,6 @@ void motor_3508_update(motor_3508_t *motor)
 	motor->base_info->current <<= 8;
 	motor->base_info->current |= hcan1RxFrame.data[5];
 	motor->base_info->temperature = hcan1RxFrame.data[6];
-	
-	
 	
 }
 

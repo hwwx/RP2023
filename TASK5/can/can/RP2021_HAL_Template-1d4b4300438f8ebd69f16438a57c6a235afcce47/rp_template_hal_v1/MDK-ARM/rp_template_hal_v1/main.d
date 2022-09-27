@@ -75,3 +75,4 @@ rp_template_hal_v1\main.o: ../Application/DeviceLayer/Sensor/rc_sensor.h
 rp_template_hal_v1\main.o: ../Application/DeviceLayer/Sensor/imu_sensor.h
 rp_template_hal_v1\main.o: ../Application/DeviceLayer/Motor/chassis_motor.h
 rp_template_hal_v1\main.o: ..\Application\3508\3508_motor.h
+rp_template_hal_v1\main.o: ..\Application\3508\6020_motor.h

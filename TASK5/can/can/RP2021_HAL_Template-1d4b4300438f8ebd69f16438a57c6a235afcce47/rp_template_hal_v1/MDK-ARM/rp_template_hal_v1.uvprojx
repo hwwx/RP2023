@@ -2711,12 +2711,17 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>3508</GroupName>
+          <GroupName>MOTOR</GroupName>
           <Files>
             <File>
               <FileName>3508_motor.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Application\3508\3508_motor.c</FilePath>
+            </File>
+            <File>
+              <FileName>6020_motor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Application\3508\6020_motor.c</FilePath>
             </File>
           </Files>
         </Group>

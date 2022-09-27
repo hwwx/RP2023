@@ -55,3 +55,4 @@ rp_template_hal_v1\freertos.o: ..\Application\3508\3508_motor.h
 rp_template_hal_v1\freertos.o: ../Application/DriverLayer/drv_can.h
 rp_template_hal_v1\freertos.o: ../Application/ConfigLayer/rp_driver_config.h
 rp_template_hal_v1\freertos.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+rp_template_hal_v1\freertos.o: ..\Application\3508\6020_motor.h

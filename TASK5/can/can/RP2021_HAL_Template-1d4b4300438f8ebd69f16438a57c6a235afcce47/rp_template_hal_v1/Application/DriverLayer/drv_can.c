@@ -20,10 +20,15 @@
 #include "rp_math.h"
 #include "drv_haltick.h"
 #include "3508_motor.h"
+#include "6020_motor.h"
 extern CAN_HandleTypeDef hcan1;
 extern CAN_HandleTypeDef hcan2;
 uint8_t can1_tx_buf[16];
+
+
+
 extern motor_3508_t motor_3508__structure;
+extern motor_6020_t motor_6020__structure;
 
 /* Private macro -------------------------------------------------------------*/
 #define DEFAULT_CAN_TX_PERIOD (2)   // 选择自动发送时建议发送间隔>=2ms
@@ -81,8 +86,14 @@ static void CAN_Rx_Callback(CAN_HandleTypeDef *hcan)
 {
 		HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &hcan1RxFrame.header, hcan1RxFrame.data);
 		
-	motor_3508_update(&motor_3508__structure);//以后这估计得判断是哪个电机的数据
-		//CAN1_rxDataHandler(hcan1RxFrame.header.StdId, hcan1RxFrame.data);
+		if(hcan1RxFrame.header.StdId == 0x200 + 1)//3508
+		{
+			MOTOR_3508_GET_DATA(&motor_3508__structure);
+		}else if(hcan1RxFrame.header.StdId == 0x205)//6020
+		{
+			MOTOR_6020_GET_DATA(&motor_6020__structure);
+		}
+
 }
 
 /**

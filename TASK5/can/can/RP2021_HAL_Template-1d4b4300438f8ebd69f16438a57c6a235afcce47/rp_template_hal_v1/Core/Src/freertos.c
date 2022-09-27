@@ -32,6 +32,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 #include "3508_motor.h"
+#include "6020_motor.h"
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -47,6 +48,7 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 extern motor_3508_t motor_3508__structure;
+extern motor_6020_t motor_6020__structure;
 extern uint8_t data_buffer[7];
 extern HAL_StatusTypeDef MY_CAN_Sent_Data( uint16_t data_1,uint16_t data_2,uint16_t data_3,uint16_t data_4);
 extern CAN_RxFrameTypeDef hcan1RxFrame;
@@ -183,14 +185,14 @@ static void KAL_Task(void* pvParameters)
 			{
 				
 
-				motor_3508__structure.output_current=500;
+				motor_6020__structure.output_current=3000;
 			
-				MY_CAN_Sent_Data(motor_3508__structure.output_current,0,0,0);//发送数据
+				MOTOR_6020_CAN_SENT_DATA(motor_6020__structure.output_current,0,0,0);//发送数据
 				
 				/*调试参数*/
-				angle=motor_3508__structure.base_info->angle;
-				current=motor_3508__structure.base_info->current;
-				speed=motor_3508__structure.base_info->speed;
+				angle=motor_6020__structure.base_info->angle;
+				current=motor_6020__structure.base_info->current;
+				speed=motor_6020__structure.base_info->speed;
 
 				
 				osDelay(2);

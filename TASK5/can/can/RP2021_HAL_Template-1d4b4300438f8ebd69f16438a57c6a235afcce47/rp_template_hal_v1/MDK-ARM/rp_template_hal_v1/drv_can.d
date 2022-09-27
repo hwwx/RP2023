@@ -56,3 +56,4 @@ rp_template_hal_v1\drv_can.o: ../Middlewares/Third_Party/FreeRTOS/Source/include
 rp_template_hal_v1\drv_can.o: ../Application/AlgorithmLayer/rp_math.h
 rp_template_hal_v1\drv_can.o: ..\Application\DriverLayer\drv_haltick.h
 rp_template_hal_v1\drv_can.o: ..\Application\3508\3508_motor.h
+rp_template_hal_v1\drv_can.o: ..\Application\3508\6020_motor.h

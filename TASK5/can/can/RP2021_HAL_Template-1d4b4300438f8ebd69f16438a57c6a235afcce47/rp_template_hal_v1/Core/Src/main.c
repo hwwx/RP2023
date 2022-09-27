@@ -33,6 +33,7 @@
 #include "driver.h"
 #include "device.h"
 #include "3508_motor.h"
+#include "6020_motor.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -54,6 +55,11 @@
 /* USER CODE BEGIN PV */
 motor_3508_t motor_3508__structure;
 motor_3508_base_info_t motor_3508_base_info;
+
+motor_6020_t           motor_6020__structure;
+motor_6020_base_info_t motor_6020_base_info;
+motor_6020_info_t      motor_6020_info;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -111,9 +117,7 @@ int main(void)
 	DRIVER_Init();
 	// 设备层初始化
 	DEV_Init();
-
-	motor_3508_init(&motor_3508__structure);
-	motor_3508__structure.base_info=&motor_3508_base_info;
+	MOTOR_6020_INIT(&motor_6020__structure,&motor_6020_base_info,&motor_6020_info);
 	
   /* USER CODE END 2 */
 
