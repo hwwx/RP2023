@@ -83,6 +83,7 @@ typedef struct
 	{
 			uint8_t  age;
 			uint32_t height;
+		  float    real_height;
 	}task_data_t;
 
 typedef struct
@@ -96,8 +97,7 @@ typedef struct
 
 void MY_TASK_PACK_INIT(info_pack_t* pack,CAN_TxHeaderTypeDef* Tx_header);
 void MY_CAN_SENT_DATA(info_pack_t *pack);
-void MY_CAN_GET_DATA6
-	(info_pack_t *pack);
+void MY_CAN_GET_DATA(info_pack_t *pack);
 
 
 

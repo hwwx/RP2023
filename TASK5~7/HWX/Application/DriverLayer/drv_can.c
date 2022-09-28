@@ -215,14 +215,14 @@ void MY_TASK_PACK_INIT(info_pack_t* pack, CAN_TxHeaderTypeDef* pTx_header)
 	pack->Tx_header=pTx_header;//这步没有执行
 	
 	
-	pack->Tx_header->StdId=Tx_ID;
-	pack->Tx_header->IDE= CAN_ID_STD;
-	pack->Tx_header->RTR=CAN_RTR_DATA;
-	pack->Tx_header->DLC=0x05;// 五位数据
+	pack->Tx_header->StdId = Tx_ID;
+	pack->Tx_header->IDE   = CAN_ID_STD;
+	pack->Tx_header->RTR   = CAN_RTR_DATA;
+	pack->Tx_header->DLC   = 0x05;// 五位数据
 	
-	pack->my_info_t.age=0x13;
-	pack->my_info_t.height=0x12345678;
-	
+	pack->my_info_t.age         = 0x13;
+	pack->my_info_t.real_height = 189.4f;
+	pack->my_info_t.height      = (uint32_t)189.4*10;//发送乘十，接收除十
 	//发送的就没必要初始化了
 }
 
@@ -249,17 +249,15 @@ void MY_CAN_SENT_DATA(info_pack_t *pack)
  */
 void MY_CAN_GET_DATA(info_pack_t *pack)
 {
-	pack->get_info_t.age = hcan1RxFrame.data[0];
+	pack->get_info_t.age          = hcan1RxFrame.data[0];
 	
-	pack->get_info_t.height =hcan1RxFrame.data[1]*16*16*16*16*16*16
-													+hcan1RxFrame.data[2]*16*16*16*16
-													+hcan1RxFrame.data[3]*16*16
-													+hcan1RxFrame.data[4];
+	pack->get_info_t.height       = hcan1RxFrame.data[1]*16*16*16*16*16*16
+													      + hcan1RxFrame.data[2]*16*16*16*16
+													      + hcan1RxFrame.data[3]*16*16
+												       	+ hcan1RxFrame.data[4];
+	pack->get_info_t.real_height  = (float)pack->get_info_t.height/10;
+	//由于发送乘十，接收除十这种方式过于投机取巧，所以我还是写个正经程序吧
 	
-//	pack->get_info_t.height=(hcan1RxFrame.data[1] << 24)\
-//												||(hcan1RxFrame.data[2] << 16)\
-//												||(hcan1RxFrame.data[3] << 8)\
-//												||(hcan1RxFrame.data[4]);
 	
 }
 #endif
