@@ -154,7 +154,7 @@
           <Type>0</Type>
           <LineNumber>137</LineNumber>
           <EnabledFlag>0</EnabledFlag>
-          <Address>134250080</Address>
+          <Address>134250152</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -278,6 +278,11 @@
           <count>3</count>
           <WinNumber>2</WinNumber>
           <ItemText>TASK_info_pack</ItemText>
+        </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>teat</ItemText>
         </Ww>
       </WatchWindow2>
       <Tracepoint>

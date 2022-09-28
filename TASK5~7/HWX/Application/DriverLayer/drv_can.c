@@ -260,18 +260,19 @@ void MY_CAN_GET_DATA(info_pack_t *pack)
 {
 	pack->get_info_t.age          = hcan1RxFrame.data[0];
 	
-	pack->get_info_t.height       = hcan1RxFrame.data[1]*16*16*16*16*16*16
-													      + hcan1RxFrame.data[2]*16*16*16*16
-													      + hcan1RxFrame.data[3]*16*16
-												       	+ hcan1RxFrame.data[4];
+	pack->get_info_t.height       = hcan1RxFrame.data[4]*16*16*16*16*16*16
+													      + hcan1RxFrame.data[3]*16*16*16*16
+													      + hcan1RxFrame.data[2]*16*16
+												       	+ hcan1RxFrame.data[1];
 	pack->get_info_t.real_height  = (float)pack->get_info_t.height/10;
 
 #if REAL_FOLAT
-  	void *tem_pointer = & pack->my_info_t.real_height;
-		*((uint8_t*)tem_pointer)     = hcan1RxFrame.data[1];  
+  	void *tem_pointer = & pack->get_info_t.real_height;
+		*((uint8_t*)tem_pointer)    = hcan1RxFrame.data[1];  
 		*((uint8_t*)tem_pointer+1)  = hcan1RxFrame.data[2];
 	  *((uint8_t*)tem_pointer+2)  = hcan1RxFrame.data[3];
 		*((uint8_t*)tem_pointer+3)  = hcan1RxFrame.data[4];
+	
 	
 #endif
 	

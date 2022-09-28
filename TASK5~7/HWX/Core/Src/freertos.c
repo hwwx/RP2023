@@ -60,6 +60,7 @@ extern CAN_HandleTypeDef hcan1;
 
 
 uint16_t speed,current,angle;
+float teat;
 /* 电机操作句柄 */
 static TaskHandle_t KAL_Handle = NULL;
 /* 电机监控句柄 */
@@ -211,7 +212,6 @@ static void KAL_Task(void* pvParameters)
 				angle=motor_6020__structure.base_info->angle;
 				current=motor_6020__structure.base_info->current;
 				speed=motor_3508__structure.base_info->speed;
-				
 				
 				#if TASK7
 				/*TASK7*/
