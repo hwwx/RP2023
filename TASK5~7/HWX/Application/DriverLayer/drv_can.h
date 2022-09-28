@@ -75,9 +75,17 @@ void CAN_AutoTx(CAN_MailboxTypeDef *mailbox);
 
 #define TASK7 1
 
+
 #if TASK7
+
+
 /*数据包定义*/
 #define Tx_ID 0x02
+
+/*由于发送乘十，接收除十这种方式过于投机取巧，所以我还是写个正经程序吧*/
+#define REAL_FOLAT 1
+
+
 
 typedef struct
 	{

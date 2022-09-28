@@ -234,12 +234,21 @@ void MY_CAN_SENT_DATA(info_pack_t *pack)
 	  uint8_t data[5];
 		uint32_t txMailBox;
 		
+
   	data[0]      = pack->my_info_t.age;
 		data[1]      = pack->my_info_t.height >> 24;
 		data[2]      = pack->my_info_t.height >> 16;
 		data[3]      = pack->my_info_t.height >> 8;
 		data[4]      = pack->my_info_t.height >> 0;
-
+	
+#if REAL_FOLAT
+		//正经的发送浮点数程序
+		void *tem_pointer   = & pack->my_info_t.real_height;
+		data[1]             = *((uint8_t*)tem_pointer);
+		data[2]             = *((uint8_t*)tem_pointer+1);
+	  data[3]             = *((uint8_t*)tem_pointer+2);
+		data[4]             = *((uint8_t*)tem_pointer+3);
+#endif
 		
 	HAL_CAN_AddTxMessage(&hcan1,pack->Tx_header,data,&txMailBox);
 }
@@ -256,11 +265,21 @@ void MY_CAN_GET_DATA(info_pack_t *pack)
 													      + hcan1RxFrame.data[3]*16*16
 												       	+ hcan1RxFrame.data[4];
 	pack->get_info_t.real_height  = (float)pack->get_info_t.height/10;
-	//由于发送乘十，接收除十这种方式过于投机取巧，所以我还是写个正经程序吧
+
+#if REAL_FOLAT
+  	void *tem_pointer = & pack->my_info_t.real_height;
+		*((uint8_t*)tem_pointer)     = hcan1RxFrame.data[1];  
+		*((uint8_t*)tem_pointer+1)  = hcan1RxFrame.data[2];
+	  *((uint8_t*)tem_pointer+2)  = hcan1RxFrame.data[3];
+		*((uint8_t*)tem_pointer+3)  = hcan1RxFrame.data[4];
+	
+#endif
+	
 	
 	
 }
-#endif
+
+#endif /* TASK7 */
 /* Exported functions --------------------------------------------------------*/
 /**
  *	@brief	CAN1 初始化
