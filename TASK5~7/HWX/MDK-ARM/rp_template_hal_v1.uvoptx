@@ -152,18 +152,18 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>224</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
+          <LineNumber>137</LineNumber>
+          <EnabledFlag>0</EnabledFlag>
+          <Address>134250080</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>startup_stm32f407xx.s</Filename>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>../Core/Src/main.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression></Expression>
+          <Expression>\\rp_template_hal_v1\../Core/Src/main.c\137</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -262,22 +262,22 @@
         <Ww>
           <count>0</count>
           <WinNumber>2</WinNumber>
-          <ItemText>test</ItemText>
+          <ItemText>hcan1RxFrame</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>2</WinNumber>
-          <ItemText>hcan1RxFrame</ItemText>
+          <ItemText>motor_3508__structure</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>2</WinNumber>
-          <ItemText>motor_3508__structure</ItemText>
+          <ItemText>motor_6020__structure</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>2</WinNumber>
-          <ItemText>motor_6020__structure</ItemText>
+          <ItemText>TASK_info_pack</ItemText>
         </Ww>
       </WatchWindow2>
       <Tracepoint>

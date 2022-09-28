@@ -29,7 +29,10 @@ uint8_t can1_tx_buf[16];
 
 extern motor_3508_t motor_3508__structure;
 extern motor_6020_t motor_6020__structure;
+#if TASK7
 extern info_pack_t  TASK_info_pack;
+#endif
+
 /* Private macro -------------------------------------------------------------*/
 #define DEFAULT_CAN_TX_PERIOD (2)   // 选择自动发送时建议发送间隔>=2ms
 
@@ -84,6 +87,8 @@ static void CAN_Filter_ParamsInit(CAN_FilterTypeDef *sFilterConfig)
  */
 static void CAN_Rx_Callback(CAN_HandleTypeDef *hcan)
 {
+	
+		
 		HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &hcan1RxFrame.header, hcan1RxFrame.data);
 		
 		if(hcan1RxFrame.header.StdId == 0x201)//3508
@@ -95,10 +100,12 @@ static void CAN_Rx_Callback(CAN_HandleTypeDef *hcan)
 			motor_6020__structure.info->offline_cnt=0;
 			MOTOR_6020_GET_DATA(&motor_6020__structure);
 		}
+		
 		#if TASK7
-		
-		MY_CAN_GET_DATA(&);
-		
+		if(hcan1RxFrame.header.StdId == 0x02)//TASK7
+		{
+			MY_CAN_GET_DATA(&TASK_info_pack);
+		}
 		#endif
 
 }
@@ -202,24 +209,21 @@ static void CAN_UpdatePeriodAtTxPort(CAN_TxPortTypeDef *port, uint16_t tx_period
 /**
  *	@brief	数据包初始化
  */
-void MY_TASK_PACK_INIT(info_pack_t* pack,\
-											 CAN_RxHeaderTypeDef* pRx_header,\
-											 CAN_TxHeaderTypeDef* pTx_header)
+void MY_TASK_PACK_INIT(info_pack_t* pack, CAN_TxHeaderTypeDef* pTx_header)
 {
-	pack->Rx_header=pRx_header;
-	pack->Tx_header=pTx_header;
+
+	pack->Tx_header=pTx_header;//这步没有执行
 	
-	pack->Rx_header->StdId=Rx_ID;
-	pack->Rx_header->IDE= CAN_ID_STD;
-	pack->Rx_header->RTR=CAN_RTR_DATA;
-	pack->Rx_header->DLC=0x05;// 五位数据
 	
 	pack->Tx_header->StdId=Tx_ID;
 	pack->Tx_header->IDE= CAN_ID_STD;
 	pack->Tx_header->RTR=CAN_RTR_DATA;
 	pack->Tx_header->DLC=0x05;// 五位数据
 	
+	pack->my_info_t.age=0x13;
+	pack->my_info_t.height=0x12345678;
 	
+	//发送的就没必要初始化了
 }
 
 /**
@@ -230,11 +234,12 @@ void MY_CAN_SENT_DATA(info_pack_t *pack)
 	  uint8_t data[5];
 		uint32_t txMailBox;
 		
-		data[0]      = pack->my_info_t.age;
+  	data[0]      = pack->my_info_t.age;
 		data[1]      = pack->my_info_t.height >> 24;
 		data[2]      = pack->my_info_t.height >> 16;
 		data[3]      = pack->my_info_t.height >> 8;
 		data[4]      = pack->my_info_t.height >> 0;
+
 		
 	HAL_CAN_AddTxMessage(&hcan1,pack->Tx_header,data,&txMailBox);
 }
@@ -245,10 +250,17 @@ void MY_CAN_SENT_DATA(info_pack_t *pack)
 void MY_CAN_GET_DATA(info_pack_t *pack)
 {
 	pack->get_info_t.age = hcan1RxFrame.data[0];
-	pack->get_info_t.height=(hcan1RxFrame.data[1] << 24)\
-												&&(hcan1RxFrame.data[2] << 16)\
-												&&(hcan1RxFrame.data[3] << 8)\
-												&&(hcan1RxFrame.data[4]);
+	
+	pack->get_info_t.height =hcan1RxFrame.data[1]*16*16*16*16*16*16
+													+hcan1RxFrame.data[2]*16*16*16*16
+													+hcan1RxFrame.data[3]*16*16
+													+hcan1RxFrame.data[4];
+	
+//	pack->get_info_t.height=(hcan1RxFrame.data[1] << 24)\
+//												||(hcan1RxFrame.data[2] << 16)\
+//												||(hcan1RxFrame.data[3] << 8)\
+//												||(hcan1RxFrame.data[4]);
+	
 }
 #endif
 /* Exported functions --------------------------------------------------------*/

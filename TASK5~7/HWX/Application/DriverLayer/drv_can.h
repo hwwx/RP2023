@@ -77,7 +77,6 @@ void CAN_AutoTx(CAN_MailboxTypeDef *mailbox);
 
 #if TASK7
 /*数据包定义*/
-#define Rx_ID 0x01
 #define Tx_ID 0x02
 
 typedef struct
@@ -88,18 +87,17 @@ typedef struct
 
 typedef struct
 	{		
-			CAN_RxHeaderTypeDef* Rx_header;
+			//CAN_RxHeaderTypeDef* Rx_header;
 			CAN_TxHeaderTypeDef* Tx_header;
 			task_data_t         my_info_t;
 			task_data_t         get_info_t;	
 	}info_pack_t;
 
 
-void MY_TASK_PACK_INIT(info_pack_t* pack,\
-											 CAN_RxHeaderTypeDef* Rx_header,\
-											 CAN_TxHeaderTypeDef* Tx_header);
+void MY_TASK_PACK_INIT(info_pack_t* pack,CAN_TxHeaderTypeDef* Tx_header);
 void MY_CAN_SENT_DATA(info_pack_t *pack);
-void MY_CAN_GET_DATA(info_pack_t *pack);
+void MY_CAN_GET_DATA6
+	(info_pack_t *pack);
 
 
 

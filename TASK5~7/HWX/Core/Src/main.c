@@ -61,10 +61,10 @@ motor_6020_t           motor_6020__structure;
 motor_6020_base_info_t motor_6020_base_info;
 motor_6020_info_t      motor_6020_info;
 
+#if TASK7
 info_pack_t            TASK_info_pack;
-CAN_RxHeaderTypeDef    TASK_Rx;
 CAN_TxHeaderTypeDef    TASK_Tx;
-
+#endif
 
 
 
@@ -126,9 +126,11 @@ int main(void)
 	// 设备层初始化
 	DEV_Init();
 	
-	MOTOR_6020_INIT(&motor_6020__structure,&motor_6020_base_info,&motor_6020_info);
-	MOTOR_3508_INIT(&motor_3508__structure,&motor_3508_base_info,&motor_3508_info);
-	MY_TASK_PACK_INIT(&TASK_info_pack,&TASK_Rx,&TASK_Tx);
+	MOTOR_6020_INIT( &motor_6020__structure, &motor_6020_base_info, &motor_6020_info);
+	MOTOR_3508_INIT( &motor_3508__structure, &motor_3508_base_info, &motor_3508_info);
+	#if TASK7
+	MY_TASK_PACK_INIT(&TASK_info_pack, &TASK_Tx);
+	#endif
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

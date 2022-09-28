@@ -49,13 +49,14 @@
 /* USER CODE BEGIN Variables */
 extern motor_3508_t motor_3508__structure;
 extern motor_6020_t motor_6020__structure;
+#if TASK7
 extern info_pack_t  TASK_info_pack;
-
+#endif
 extern HAL_StatusTypeDef MY_CAN_Sent_Data( uint16_t data_1,uint16_t data_2,uint16_t data_3,uint16_t data_4);
 extern CAN_RxFrameTypeDef hcan1RxFrame;
 
-
 extern CAN_HandleTypeDef hcan1;
+
 
 
 uint16_t speed,current,angle;
@@ -76,7 +77,7 @@ osThreadId ControlTaskHandle;
 osThreadId SystemTaskHandle;
 osThreadId SendTaskHandle;
 
-extern CAN_RxFrameTypeDef hcan1RxFrame;
+
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -212,10 +213,10 @@ static void KAL_Task(void* pvParameters)
 				speed=motor_3508__structure.base_info->speed;
 				
 				
-				
+				#if TASK7
 				/*TASK7*/
 				MY_CAN_SENT_DATA(&TASK_info_pack);
-
+				#endif
 				
 				osDelay(2);
 
